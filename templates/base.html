@@ -1,0 +1,16 @@
+<html>
+<head>
+  {% block head %}
+  <title>{{ titulo_pagina }} - Anette</title>
+  <!-- link rel="icon" type="image/png" href="favicon.png"> -->
+  {% endblock %}
+</head>
+<body>
+  <h1 style="background-color: #8064aa;">{{ titulo_pagina }}</h1>
+  <h2 style="background-color: #9280ff; align-content: flex-end;"> {% if usuario %} Olá, {{ usuario }}! {% else %} <a href="login">Login</a> {% endif %} </h2>
+  <p style="background-color: #a0a0ff;">Navegador: {{ user_agent }}</p>
+  {% block body %}
+  {% endblock %}
+  <!-- <a href="hi">Vai pra pagina Hi</a> -->
+</body>
+</html>
