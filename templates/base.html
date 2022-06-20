@@ -1,7 +1,12 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}{{ titulo_pagina }} - Anette{% endblock %}
+{% block title %}{{ page_title }} - Anette{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+{% endblock %}
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation" style="background-color: #503050; ;">
+<div class="navbar navbar-inverse" role="navigation">
     <!-- <p>Navegador: {{ user_agent }}</p> --> 
     <div class="container">
         <div class="navbar-header">
@@ -11,6 +16,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='logo_anette.png') }}">
+            </a>
             <a class="navbar-brand" href="/">Anette</a>
         </div>
         <div class="navbar-collapse collapse">
@@ -21,12 +29,18 @@
             </ul>
         </div>
     </div>
+    <p style="color: #202020; background-color: rgb(173, 167, 160); text-align: right;">{{ moment(current_time).format('DD/MM/YYYY HH:mm:ss') }} [That was {{ moment(current_time).fromNow(refresh=True) }}]</p>
+    <!--  [That was {{ moment(current_time).fromNow(refresh=True) }}] -->
 </div>
 {% endblock %}
 {% block content %}
 <div class="container">
-    <div class="page-header" style="background-color: #8064aa;">
-        <h1>{{ titulo_pagina }}</h1>
+    <div class="page-header" style="background-color: rgb(204, 149, 76);">
+        <h1>{{ page_title }}</h1>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
 {% endblock %}
