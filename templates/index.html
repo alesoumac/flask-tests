@@ -1,5 +1,15 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 {% block content %}
 {{ super() }}
-<h5>Hello pra everybody aqui!!!</h5>
+<div class="page-header">
+    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+</div>
+{{ wtf.quick_form(form) }}
+<!-- form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.name.label }}
+    {{ form.name() }}
+    {{ form.submit() }}
+</form -->
 {% endblock %}

@@ -23,7 +23,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">Início</a></li>
+                <!-- li><a href="/">Início</a></li -->
                 <li><a href="/estagiarios">Estagiários</a></li>
                 <li><a href="/empresas">Empresas</a></li>
             </ul>
@@ -35,9 +35,14 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <div class="page-header" style="background-color: rgb(204, 149, 76);">
-        <h1>{{ page_title }}</h1>
+    <p style="color: #000000; background-color: rgb(204, 149, 76);"><b>{{ page_title }}</b></p>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
     </div>
+    {% endfor %}
+    {% block page_content %}{% endblock %}
 </div>
 {% endblock %}
 {% block scripts %}
