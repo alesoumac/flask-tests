@@ -5,21 +5,16 @@ from flask import (Flask, flash, redirect, render_template, request, session,
                    url_for)
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
-from flask_sqlalchemy import SQLAlchemy
+from db_global import initializeDatabase
 
 from hello import NameForm
 
-app = Flask(__name__)
-bootst = Bootstrap(app)
-moment = Moment(app)
-app.config['SECRET_KEY'] = '9JNM%_D8uJF-1@knC,gOp$'
+APP = Flask(__name__)
+bootst = Bootstrap(APP)
+moment = Moment(APP)
+APP.config['SECRET_KEY'] = '9JNM%_D8uJF-1@knC,gOp$'
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-print("BaseDir = %r" % basedir)
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-    'sqlite:///' + os.path.join(basedir, 'db','ant.sqlite3')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+initializeDatabase(APP)
 
 def render_template_anette(html_file, page_title, **other_args):
     user_agent = request.headers.get('User-Agent')
@@ -36,7 +31,7 @@ def render_error(error_number, error_message):
         error_number=str(error_number), error_message=error_message,
         current_time=datetime.utcnow()), error_number
 
-@app.route('/', methods=['GET', 'POST'])
+@APP.route('/', methods=['GET', 'POST'])
 def index():
     formName = NameForm()
 
@@ -56,11 +51,11 @@ def index():
         #birth_date = session.get('birth_date')
         )
 
-@app.route('/estagiarios/')
+@APP.route('/estagiarios/')
 def estagiarios():
     return render_template_anette("user.html", page_title="Estagiários")
 
-@app.route('/empresas/')
+@APP.route('/empresas/')
 def empresas():
     return render_template_anette("user.html", page_title="Empresas")
 
@@ -68,10 +63,10 @@ def empresas():
 #def greet(username):
 #    return f"Hi, {username}"
 
-@app.errorhandler(404)
+@APP.errorhandler(404)
 def pagina_nao_encontrada(e):
     return render_error(404, 'Página não encontrada')
 
-@app.errorhandler(500)
+@APP.errorhandler(500)
 def erro_interno_servidor(e):
     return render_error(500, 'Erro interno do servidor')
