@@ -2,7 +2,6 @@ from datetime import datetime
 
 from flask import flash, redirect, session, url_for
 
-import dbclasses_accounts
 from db_global import (APP, DB, render_error, render_form_anette,
                        render_template_anette)
 from hello import NameForm
@@ -50,10 +49,3 @@ def erro_interno_servidor(e):
 
 @APP.shell_context_processor
 def make_shell_context():
-    return dict(
-        DB          = DB, 
-        Usuario     = dbclasses_accounts.Usuario,
-        Perfil      = dbclasses_accounts.Perfil,
-        Acao        = dbclasses_accounts.Acao,
-        PerfilAcao  = dbclasses_accounts.PerfilAcao,
-        UsuarioAcao = dbclasses_accounts.UsuarioAcao)

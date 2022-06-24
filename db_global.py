@@ -32,3 +32,4 @@ def render_error(error_number, error_message):
     return render_template("erro.html", page_title="Erro",
         error_number=str(error_number), error_message=error_message,
         current_time=datetime.utcnow()), error_number
+
