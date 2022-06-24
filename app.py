@@ -1,35 +1,12 @@
-import os
 from datetime import datetime
 
-from flask import (Flask, flash, redirect, render_template, request, session,
-                   url_for)
-from flask_bootstrap import Bootstrap
-from flask_moment import Moment
-from db_global import initializeDatabase
+from flask import flash, redirect, session, url_for
 
+import dbclasses_accounts
+from db_global import (APP, DB, render_error, render_form_anette,
+                       render_template_anette)
 from hello import NameForm
 
-APP = Flask(__name__)
-bootst = Bootstrap(APP)
-moment = Moment(APP)
-APP.config['SECRET_KEY'] = '9JNM%_D8uJF-1@knC,gOp$'
-
-initializeDatabase(APP)
-
-def render_template_anette(html_file, page_title, **other_args):
-    user_agent = request.headers.get('User-Agent')
-    return render_template(html_file, page_title=page_title,
-        usuario="Alexandre", user_agent=user_agent,
-        current_time=datetime.utcnow(), **other_args)
-
-def render_form_anette(html_file, page_title, form, **form_fields):
-    return render_template_anette(html_file, page_title=page_title,
-        form=form, **form_fields)
-
-def render_error(error_number, error_message):
-    return render_template("erro.html", page_title="Erro",
-        error_number=str(error_number), error_message=error_message,
-        current_time=datetime.utcnow()), error_number
 
 @APP.route('/', methods=['GET', 'POST'])
 def index():
@@ -70,3 +47,13 @@ def pagina_nao_encontrada(e):
 @APP.errorhandler(500)
 def erro_interno_servidor(e):
     return render_error(500, 'Erro interno do servidor')
+
+@APP.shell_context_processor
+def make_shell_context():
+    return dict(
+        DB          = DB, 
+        Usuario     = dbclasses_accounts.Usuario,
+        Perfil      = dbclasses_accounts.Perfil,
+        Acao        = dbclasses_accounts.Acao,
+        PerfilAcao  = dbclasses_accounts.PerfilAcao,
+        UsuarioAcao = dbclasses_accounts.UsuarioAcao)
