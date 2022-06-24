@@ -47,5 +47,3 @@ def pagina_nao_encontrada(e):
 def erro_interno_servidor(e):
     return render_error(500, 'Erro interno do servidor')
 
-@APP.shell_context_processor
-def make_shell_context():
