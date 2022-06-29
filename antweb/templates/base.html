@@ -1,0 +1,51 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}{{ page_title }} - Anette{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+{% endblock %}
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <!-- <p>Navegador: {{ user_agent }}</p> --> 
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='logo_anette.png') }}">
+            </a>
+            <a class="navbar-brand" href="/">Anette</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <!-- li><a href="/">Início</a></li -->
+                <li><a href="/estagiarios">Estagiários</a></li>
+                <li><a href="/empresas">Empresas</a></li>
+            </ul>
+        </div>
+    </div>
+    <p style="color: #202020; background-color: rgb(173, 167, 160); text-align: right;">{{ moment(current_time).format('DD/MM/YYYY HH:mm:ss') }} [That was {{ moment(current_time).fromNow(refresh=True) }}]</p>
+    <!--  [That was {{ moment(current_time).fromNow(refresh=True) }}] -->
+</div>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <p style="color: #000000; background-color: rgb(204, 149, 76);"><b>{{ page_title }}</b></p>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock %}
