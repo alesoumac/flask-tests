@@ -17,7 +17,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/"><img style="max-width: 40px; max-height: 40px;" src="{{ url_for('static', filename='favicon.png') }}" /></a>
-            <a class="navbar-brand" href="/">Visual Valid</a>
+            <a class="navbar-brand" href="/">Visual Check</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -26,11 +26,17 @@
             </ul>
         </div>
     </div>
-    <p style="color: #202020; background-color: rgb(173, 167, 160); text-align: right;">
-        {% if usuario %} {{ usuario }} {% else %} <i>Anônimo</i> {{ usuario }} {% endif %}
+    <p style="color: #202020; background-color: rgb(203, 184, 230); text-align: right;">
         {% if avatar %}
-            <img style="max-width: 32px; max-height: 32px;" src="{{ avatar }}">
+            <img style="max-width: 48px; max-height: 48px; border-radius: 32%;" src="{{ avatar }}">
         {% else %} {{ avatar }} {% endif %}
+        &nbsp;
+        {% if usuario %}
+            <a href="user/{{ usuario }}" alt="Clique para acessar seu perfil">{{ usuario }}</a>
+        {% else %}
+            <i>Anônimo</i> 
+        {% endif %}
+        |
         {{ current_time}}
     </p>
 </div>

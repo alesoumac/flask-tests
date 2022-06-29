@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import randint
 from flask import flash, redirect, session, url_for
 
 from config import (APP, DB, BASE_DIR, global_render_template, global_render_form_template, global_render_error)
@@ -18,7 +19,7 @@ def index():
 
     return global_render_template('index.html', page_title="Início",
         usuario="Alexandre",
-        avatar=33
+        avatar=randint(1,40)
         #birth_date = session.get('birth_date')
         )
 

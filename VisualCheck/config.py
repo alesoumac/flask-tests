@@ -17,7 +17,7 @@ DB = SQLAlchemy(APP)
 print("BaseDir = %r" % BASE_DIR)
 
 def global_render_template(html_file, page_title, **pre_args):
-    print("Preargs", pre_args)
+    # print("Preargs", pre_args)
     other_args = {}
     for arg in pre_args:
         other_args[arg] = pre_args[arg]
@@ -32,7 +32,7 @@ def global_render_template(html_file, page_title, **pre_args):
     else:
         other_args['avatar'] = None
     current_time = datetime.now()
-    current_time_string = current_time.strftime('%d/%m/%Y %H:%M:%S')
+    current_time_string = current_time.strftime('%d/%m/%Y')
     return render_template(html_file, page_title=page_title,
         user_agent=user_agent, current_time=current_time_string, **other_args)
 
