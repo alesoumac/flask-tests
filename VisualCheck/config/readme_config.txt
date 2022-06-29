@@ -1,0 +1,1 @@
+Os arquivos des.cfg e pro.cfg, que estão na mesma pasta desse readme_config.txt, são arquivos contendo as configurações necessárias para o funcionamento do 
