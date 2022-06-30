@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from re import S
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 
@@ -10,7 +10,7 @@ SESSION_VAR_USUARIO      = 's_usuario'
 SESSION_VAR_AVATAR       = 's_avatar'
 
 TAMANHO_CAMPO_USUARIO    = 16
-TAMANHO_CAMPO_EMAIL      = 
+TAMANHO_CAMPO_EMAIL      = 80
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 APP = Flask(__name__)
@@ -29,6 +29,12 @@ def int_def(s, default=None):
     except:
         return default
 
+def get_cookie(cookieName, default=None):
+    if cookieName in session:
+        return session[cookieName]
+    else:
+        return default
+
 def global_render_template(html_file, page_title, **pre_args):
     # print("Preargs", pre_args)
     other_args = {}
@@ -36,16 +42,21 @@ def global_render_template(html_file, page_title, **pre_args):
         other_args[arg] = pre_args[arg]
     user_agent = request.headers.get('User-Agent')
     if "usuario" not in other_args:
-        other_args["usuario"] = None
+        other_args["usuario"] = get_cookie(SESSION_VAR_USUARIO)
+    
+    avatar = None
+    num_avatar = None
     if 'avatar' in other_args:
         num_avatar = int_def(other_args['avatar'])
-        if num_avatar is not None:
-            avatar = f"/static/avatar/{num_avatar:02d}.png"
-            other_args['avatar'] = avatar
-        else:
-            del(other_args['avatar'])
-    #else:
-    #    other_args['avatar'] = None
+    if num_avatar is None:
+        num_avatar = int_def(get_cookie(SESSION_VAR_AVATAR))
+
+    if num_avatar is not None:
+        avatar = f"/static/avatar/{num_avatar:02d}.png"
+        other_args['avatar'] = avatar
+    else:
+        del(other_args['avatar'])
+
     current_time = datetime.now()
     current_time_string = current_time.strftime('%d/%m/%Y')
     return render_template(html_file, page_title=page_title,

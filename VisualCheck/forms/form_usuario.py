@@ -1,9 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField
+from wtforms import HiddenField, IntegerField, StringField, SubmitField
 from wtforms.validators import DataRequired
 
-class NameForm(FlaskForm):
-    name = StringField('Nome:', validators=[DataRequired()])
-    age = IntegerField('Idade:', validators=[DataRequired()])
-    #birth_date = DateTimeLocalField('Data de Nascimento:', format="%d/%m/%Y")
+
+class UsuarioForm(FlaskForm):
+    usuario = StringField('Usuário:', validators=[DataRequired()])
+    senha = HiddenField('Senha:',validators=[DataRequired()])
+    nome = StringField('Nome:', validators=[DataRequired()])
+    email = StringField('Email:', validators=[DataRequired()])
+    avatar = IntegerField('Avatar:')
     submit = SubmitField('Submit')
