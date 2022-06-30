@@ -21,18 +21,20 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                {% if usuario %} {% else %} <li><a href="/login">Login</a></li> {% endif %}
-                <li><a href="/nada">Nada</a></li>
+                {% if usuario %} {% else %} <li><a href="/entrando">Entrar</a></li> {% endif %}
+                <li><a href="/saindo">Sair</a></li>
             </ul>
         </div>
     </div>
     <p style="color: #202020; background-color: rgb(203, 184, 230); text-align: right;">
-        {% if avatar %}
-            <img style="max-width: 48px; max-height: 48px; border-radius: 32%;" src="{{ avatar }}">
-        {% else %} {{ avatar }} {% endif %}
-        &nbsp;
         {% if usuario %}
-            <a href="user/{{ usuario }}" alt="Clique para acessar seu perfil">{{ usuario }}</a>
+            {% if avatar %}
+                <a href="/user/{{ usuario }}" alt="Clique para acessar seu perfil">
+                <img style="max-width: 48px; max-height: 48px; border-radius: 32%;" src="{{ avatar }}" />
+                </a>
+            {% else %} {% endif %}
+            &nbsp;
+            <a href="/user/{{ usuario }}" alt="Clique para acessar seu perfil">{{ usuario }}</a>
         {% else %}
             <i>Anônimo</i> 
         {% endif %}
