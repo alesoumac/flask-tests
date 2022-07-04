@@ -22,11 +22,17 @@ def save_dataframe():
 def index():
     s_usuario = get_cookie(SESSION_VAR_USUARIO)
     s_avatar  = get_cookie(SESSION_VAR_AVATAR)
+    locdf = DF.loc[DF['usuario'] == s_usuario]
+    if len(locdf) > 0:
+        s_nome = locdf['nome'].iloc[0]
+    else:
+        s_nome = None
     print("Sessao = ", session)
 
     return global_render_template('index.html', page_title="Início",
         s_usuario=s_usuario,
         s_avatar=s_avatar,
+        s_nome=s_nome
         )
 
 @APP.route('/entrando')
@@ -35,10 +41,8 @@ def entrando():
     s_usuario_id = randint(0,len(DF)-1)
     s_usuario = DF.iloc[s_usuario_id]['usuario']
     s_avatar = int(DF.iloc[s_usuario_id]['avatar'])
-    print(f'Usuario {s_usuario} | Avatar {s_avatar} : {type(s_avatar)}')
     session[SESSION_VAR_USUARIO] = s_usuario
     session[SESSION_VAR_AVATAR] = s_avatar
-    print('Tudo bem até aqui!')
     return redirect('/')
 
 @APP.route('/saindo')
@@ -59,10 +63,11 @@ def cadastro_usuario():
     global DF
     usuarioForm = UsuarioForm()
     if usuarioForm.validate_on_submit():
-        umUsuario = usuarioForm.usuario.data
-        umUsuario = umUsuario.lower()
-        locdf = DF.loc[DF['usuario'] == umUsuario]
         dicForm = usuarioForm.fields_as_dict(True)
+        dicForm['usuario'] = dicForm['usuario'].lower()
+        dicForm['nome'] = dicForm['nome'].upper()
+        umUsuario = dicForm['usuario']
+        locdf = DF.loc[DF['usuario'] == umUsuario]
         dicNewDF = {}
         listdf = []
         for campo in DF:
@@ -73,7 +78,6 @@ def cadastro_usuario():
             valor = dicForm[campo] if campo in dicForm else None
             dicNewDF[campo] = [valor]
             listdf += [valor]
-            print(f"Novos dados\n-------------------\n{dicNewDF}")
 
         if len(locdf) > 0:
             DF.loc[DF['usuario'] == umUsuario] = listdf

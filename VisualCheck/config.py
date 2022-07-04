@@ -21,7 +21,7 @@ APP.config['SQLALCHEMY_DATABASE_URI'] =\
 APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 DB = SQLAlchemy(APP)
 
-print("BaseDir = %r" % BASE_DIR)
+#print("BaseDir = %r" % BASE_DIR)
 
 def int_def(s, default=None):
     try:
@@ -40,7 +40,6 @@ def delete_cookie(cookieName):
         del(session[cookieName])
 
 def global_render_template(html_file, page_title, **pre_args):
-    # print("Preargs", pre_args)
     other_args = {}
     for arg in pre_args:
         other_args[arg] = pre_args[arg]
