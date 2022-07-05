@@ -29,6 +29,18 @@ def int_def(s, default=None):
     except:
         return default
 
+def namefy(nome):
+    if ' ' not in nome:
+        n = nome.lower()
+        if n in ['de','da','do','das','dos','e']: return n
+        p = n.split('\'')
+        n = '\''.join([m.capitalize() for m in p])
+        return n
+    p = nome.split(' ')
+    p = [namefy(n) for n in p if n != '']
+    n = ' '.join(p)
+    return n
+
 def get_cookie(cookieName, default=None):
     if cookieName in session:
         return session[cookieName]

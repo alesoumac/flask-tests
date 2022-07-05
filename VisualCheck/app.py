@@ -4,12 +4,13 @@ from random import randint
 
 import pandas as pd
 from flask import flash, redirect, session, url_for
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from config import (APP, BASE_DIR, DB, SESSION_VAR_AVATAR, SESSION_VAR_USUARIO,
                     delete_cookie, get_cookie, global_render_error,
-                    global_render_form_template, global_render_template)
+                    global_render_form_template, global_render_template,
+                    namefy)
 from forms.form_usuario import UsuarioForm
-from werkzeug.security import check_password_hash, generate_password_hash
 
 DF = pd.read_csv(os.path.join(BASE_DIR,'db','vv_users.csv'))
 
@@ -65,7 +66,7 @@ def cadastro_usuario():
     if usuarioForm.validate_on_submit():
         dicForm = usuarioForm.fields_as_dict(True)
         dicForm['usuario'] = dicForm['usuario'].lower()
-        dicForm['nome'] = dicForm['nome'].upper()
+        dicForm['nome'] = namefy(dicForm['nome'])
         umUsuario = dicForm['usuario']
         locdf = DF.loc[DF['usuario'] == umUsuario]
         dicNewDF = {}
