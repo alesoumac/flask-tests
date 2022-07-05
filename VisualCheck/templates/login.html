@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+{{ super() }}
+<div class="page-header">
+    <h1>Login</h1>
+</div>
+{% if form %}
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <table width="50%" style="border: 0pt; margin: auto;">
+            <tr>
+                <td>{{ form.usuario.label }}</td> <td>{{ form.usuario() }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.senha.label }}</td> <td>{{ form.senha() }}</td>
+            </tr>
+            <tr>
+                <td><input class="btn" id="submit" name="submit" type="submit" value="Entrar"></td>
+                <td><input class="btn" id="reset" name="reset" type="reset" value="Limpar"></td>
+            </tr>
+        </table>
+    </form>
+{% else %}
+    Erro: Página em Construção
+    Para maiores informações, entre em contato com o administrador do site: <a href="mailto:alexandre.sousa-machado@serpro.gov.br">alexandre.sousa-machado@serpro.gov.br</a>
+{% endif %}
+{% endblock %}

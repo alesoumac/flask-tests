@@ -1,11 +1,10 @@
 import os
 from datetime import datetime
-from re import S
+from urllib.parse import quote, unquote
 
 from flask import Flask, render_template, request, session
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from requests import delete
 
 SESSION_VAR_USUARIO      = 's_usuario'
 SESSION_VAR_AVATAR       = 's_avatar'
@@ -54,6 +53,12 @@ def delete_from_dic(dic,key):
 
 def delete_cookie(cookieName):
     delete_from_dic(session, cookieName)
+
+def route_encode(route):
+    return quote(quote(route,safe='',encoding='utf-8'))
+
+def route_decode(route):
+    return unquote(unquote(route), encoding='utf-8')
 
 def global_render_template(html_file, page_title, **pre_args):
     other_args = {}
