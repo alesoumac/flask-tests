@@ -1,37 +1,44 @@
+import os
 from datetime import datetime
 from random import randint
 
+import pandas as pd
 from flask import flash, redirect, session, url_for
 
 from config import (APP, BASE_DIR, DB, SESSION_VAR_AVATAR, SESSION_VAR_USUARIO,
-                    get_cookie, global_render_error,
+                    delete_cookie, get_cookie, global_render_error,
                     global_render_form_template, global_render_template)
 from forms.form_usuario import UsuarioForm
+from werkzeug.security import check_password_hash, generate_password_hash
 
+DF = pd.read_csv(os.path.join(BASE_DIR,'db','vv_users.csv'))
+
+def save_dataframe():
+    global DF
+    global BASE_DIR
+    DF.to_csv(os.path.join(BASE_DIR,'db','vv_users.csv'), index=False, encoding='utf-8')
 
 @APP.route('/')
 def index():
-    usuario = session[SESSION_VAR_USUARIO] \
-              if SESSION_VAR_USUARIO in session else \
-              None
-    avatar  = session[SESSION_VAR_AVATAR] \
-              if 's_avatar' in session else \
-              None
+    s_usuario = get_cookie(SESSION_VAR_USUARIO)
+    s_avatar  = get_cookie(SESSION_VAR_AVATAR)
     print("Sessao = ", session)
 
     return global_render_template('index.html', page_title="Início",
-        usuario=usuario,
-        avatar=avatar,
+        s_usuario=s_usuario,
+        s_avatar=s_avatar,
         )
 
 @APP.route('/entrando')
 def entrando():
-    usuarios=['Alexandre','Jussara','Leticia','Isabelle']
-    usuario_id = randint(0,len(usuarios)-1)
-    usuario = usuarios[usuario_id]
-    avatar = randint(1, 40)
-    session[SESSION_VAR_USUARIO] = usuario
-    session[SESSION_VAR_AVATAR] = avatar
+    global DF
+    s_usuario_id = randint(0,len(DF)-1)
+    s_usuario = DF.iloc[s_usuario_id]['usuario']
+    s_avatar = int(DF.iloc[s_usuario_id]['avatar'])
+    print(f'Usuario {s_usuario} | Avatar {s_avatar} : {type(s_avatar)}')
+    session[SESSION_VAR_USUARIO] = s_usuario
+    session[SESSION_VAR_AVATAR] = s_avatar
+    print('Tudo bem até aqui!')
     return redirect('/')
 
 @APP.route('/saindo')
@@ -43,27 +50,48 @@ def saindo():
 @APP.route('/usuario/<username>')
 def show_user(username):
     return global_render_template('index.html', page_title=f"{username}",
-        usuario=username,
-        avatar=randint(1,40)
+        s_usuario=username,
+        s_avatar=randint(1,40)
         )
 
 @APP.route('/cadastro/usuario', methods=['GET', 'POST'])
 def cadastro_usuario():
+    global DF
     usuarioForm = UsuarioForm()
     if usuarioForm.validate_on_submit():
-        session['usuario.usuario'] = usuarioForm.usuario.data
-        session['usuario.nome'] = usuarioForm.nome.data
-        session['usuario.email'] = usuarioForm.email.data
-        session['usuario.avatar'] = usuarioForm.avatar.data
+        umUsuario = usuarioForm.usuario.data
+        umUsuario = umUsuario.lower()
+        locdf = DF.loc[DF['usuario'] == umUsuario]
+        dicForm = usuarioForm.fields_as_dict(True)
+        dicNewDF = {}
+        listdf = []
+        for campo in DF:
+            if campo == 'senha' and campo in dicForm:
+                senh = dicForm[campo]
+                if len(senh) < 100:
+                    dicForm[campo] = generate_password_hash(senh,salt_length=32)
+            valor = dicForm[campo] if campo in dicForm else None
+            dicNewDF[campo] = [valor]
+            listdf += [valor]
+            print(f"Novos dados\n-------------------\n{dicNewDF}")
+
+        if len(locdf) > 0:
+            DF.loc[DF['usuario'] == umUsuario] = listdf
+            flash(f"Usuário '{umUsuario}' já cadastrado")
+        else:
+            DF = DF.append(pd.DataFrame(dicNewDF), ignore_index=True)
+            flash(f"Usuário '{umUsuario}' adicionado")
+            usuarioForm.clear_fields()
+
+        save_dataframe()
+        print(DF)
+
         return redirect('/cadastro/usuario')
 
     return global_render_form_template('quickform.html', 
-        page_title='Cadastro de Usuário', 
+        page_title='Cadastro de Usuário',
         form=usuarioForm,
-        usuario=usuarioForm.usuario.data,
-        nome=usuarioForm.nome.data,
-        email=usuarioForm.email.data,
-        avatar=usuarioForm.avatar.data,
+        **usuarioForm.fields_as_dict()
         )
 
     # formName = NameForm()

@@ -35,27 +35,31 @@ def get_cookie(cookieName, default=None):
     else:
         return default
 
+def delete_cookie(cookieName):
+    if cookieName in session:
+        del(session[cookieName])
+
 def global_render_template(html_file, page_title, **pre_args):
     # print("Preargs", pre_args)
     other_args = {}
     for arg in pre_args:
         other_args[arg] = pre_args[arg]
     user_agent = request.headers.get('User-Agent')
-    if "usuario" not in other_args:
-        other_args["usuario"] = get_cookie(SESSION_VAR_USUARIO)
+    if "s_usuario" not in other_args:
+        other_args["s_usuario"] = get_cookie(SESSION_VAR_USUARIO)
     
     avatar = None
     num_avatar = None
-    if 'avatar' in other_args:
-        num_avatar = int_def(other_args['avatar'])
+    if 's_avatar' in other_args:
+        num_avatar = int_def(other_args['s_avatar'])
     if num_avatar is None:
         num_avatar = int_def(get_cookie(SESSION_VAR_AVATAR))
 
     if num_avatar is not None:
         avatar = f"/static/avatar/{num_avatar:02d}.png"
-        other_args['avatar'] = avatar
+        other_args['s_avatar'] = avatar
     else:
-        del(other_args['avatar'])
+        del(other_args['s_avatar'])
 
     current_time = datetime.now()
     current_time_string = current_time.strftime('%d/%m/%Y')

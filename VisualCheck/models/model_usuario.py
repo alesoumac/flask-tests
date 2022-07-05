@@ -19,8 +19,8 @@ class Usuario(DB.Model):
 
     @senha.setter
     def senha(self, umaSenha):
-        self.hash_senha = generate_password_hash(umaSenha)
+        self.hash_senha = generate_password_hash(umaSenha,)
 
-    def verifyica_senha(self, umaSenha):
+    def verifica_senha(self, umaSenha):
         return check_password_hash(self.hash_senha, umaSenha)
 
