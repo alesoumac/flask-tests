@@ -48,8 +48,8 @@ def entrando():
 
 @APP.route('/saindo')
 def saindo():
-    del(session[SESSION_VAR_USUARIO])
-    del(session[SESSION_VAR_AVATAR])
+    delete_cookie(SESSION_VAR_USUARIO)
+    delete_cookie(SESSION_VAR_AVATAR)
     return redirect('/')
 
 @APP.route('/usuario/<username>')

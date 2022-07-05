@@ -5,6 +5,7 @@ from re import S
 from flask import Flask, render_template, request, session
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from requests import delete
 
 SESSION_VAR_USUARIO      = 's_usuario'
 SESSION_VAR_AVATAR       = 's_avatar'
@@ -47,9 +48,12 @@ def get_cookie(cookieName, default=None):
     else:
         return default
 
+def delete_from_dic(dic,key):
+    if key in dic:
+        del(dic[key])
+
 def delete_cookie(cookieName):
-    if cookieName in session:
-        del(session[cookieName])
+    delete_from_dic(session, cookieName)
 
 def global_render_template(html_file, page_title, **pre_args):
     other_args = {}
@@ -70,7 +74,7 @@ def global_render_template(html_file, page_title, **pre_args):
         avatar = f"/static/avatar/{num_avatar:02d}.png"
         other_args['s_avatar'] = avatar
     else:
-        del(other_args['s_avatar'])
+        delete_from_dic(other_args,'s_avatar')
 
     current_time = datetime.now()
     current_time_string = current_time.strftime('%d/%m/%Y')
