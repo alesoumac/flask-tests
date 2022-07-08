@@ -1,10 +1,11 @@
 from datetime import datetime
 
 from config import DB, TAMANHO_CAMPO_EMAIL, TAMANHO_CAMPO_USUARIO
+from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-class Usuario(DB.Model):
+class Usuario(UserMixin, DB.Model):
     __tablename__ = 'usuario'
     id            = DB.Column(DB.Integer, primary_key=True)
     usuario       = DB.Column(DB.String(TAMANHO_CAMPO_USUARIO), unique=True, index=True)

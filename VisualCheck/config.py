@@ -4,6 +4,7 @@ from urllib.parse import quote, unquote
 
 from flask import Flask, render_template, request, session
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 SESSION_VAR_USUARIO      = 's_usuario'
@@ -20,6 +21,9 @@ APP.config['SQLALCHEMY_DATABASE_URI'] =\
     'sqlite:///' + os.path.join(BASE_DIR, 'db','vv.sqlite3')
 APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 DB = SQLAlchemy(APP)
+LOGIN_MANAGER = LoginManager()
+LOGIN_MANAGER.login_view = 'entrando'
+LOGIN_MANAGER.init_app(APP)
 
 #print("BaseDir = %r" % BASE_DIR)
 
